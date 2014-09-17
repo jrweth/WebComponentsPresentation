@@ -1,7 +1,11 @@
 WebComponentsPresentation
 =========================
 
-Presentation in Deck.js briefly highlighting Web Components
+Presentation in Deck.js briefly highlighting HTML5 Web Components namely:
+* Custom Elements
+* Shadow DOM
+* Templates
+* Imports
 
 Acknowledgements
 ----------------
