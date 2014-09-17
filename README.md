@@ -6,7 +6,7 @@ Presentation in Deck.js briefly highlighting Web Components
 Acknowledgements
 ----------------
 
-Based upon presentation by Eric Bidelman at O'Reilly Fluent Conference 2014 and also [html5rocks.com](http://html5rocks.com
+Based upon presentation by Eric Bidelman at O'Reilly Fluent Conference 2014 and also [html5rocks.com](http://html5rocks.com)
 
 Installation
 ------------
