@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=1024, user-scalable=no">
+
+  <title>Web Components: The future of the Web</title>
+
+  <!-- Required stylesheet -->
+  <link rel="stylesheet" media="screen" href="bower_components/deck.js/core/deck.core.css">
+
+  <!-- Extension CSS files go here. Remove or add as needed. -->
+  <link rel="stylesheet" media="screen" href="bower_components/deck.js/extensions/goto/deck.goto.css">
+  <link rel="stylesheet" media="screen" href="bower_components/deck.js/extensions/menu/deck.menu.css">
+  <link rel="stylesheet" media="screen" href="bower_components/deck.js/extensions/navigation/deck.navigation.css">
+  <link rel="stylesheet" media="screen" href="bower_components/deck.js/extensions/status/deck.status.css">
+  <link rel="stylesheet" media="screen" href="bower_components/deck.js/extensions/scale/deck.scale.css">
+
+  <!-- Style theme. More available in /themes/style/ or create your own. -->
+  <link rel="stylesheet" media="screen" href="bower_components/deck.js/themes/style/neon.css">
+  <link rel="stylesheet" media="screen" href="css/neon_extra.css">
+
+  <!-- Transition theme. More available in /themes/transition/ or create your own. -->
+  <link rel="stylesheet" media="screen" href="bower_components/deck.js/themes/transition/horizontal-slide.css">
+
+  <!-- Basic black and white print styles -->
+  <link rel="stylesheet" media="print" href="bower_components/deck.js/core/print.css">
+
+  <!-- Required Modernizr file -->
+  <script src="bower_components/deck.js/modernizr.custom.js"></script>
+  <script src="bower_components/platform/platform.js"></script>
+  
+  <link rel="import" href="say_hi_widget.html">
+</head>
+<body>
+  <div class="deck-container">
+
+    <!-- Begin slides. Just make elements with a class of slide. -->
+
+    <!-- ############################################################################## -->
+    <section class="slide" title="Opening">
+      <div>
+      <h1>Web Components:<br>The Future of HTML</h1>
+      <h3>J. Reuben Wetherbee</h3>
+      <div>(best viewed with Google Chrome Browser)</div>
+      </div>
+    </section>
+
+    <!-- ############################################################################## -->
+    <section class="slide">
+      <h2>Acknowledgements</h2>
+      <ul>
+        <li>Eric Bidelman - O'Reilly Fluent Conference 2014</li>
+        <li>Eric Bidelman - <a href="http://www.html5rocks.com/en/" targe="_blank">html5rocks.com</a></li>
+        <li>Deck.js</li>
+      </ul>
+    </section>
+
+    <!-- ############################################################################## -->
+    <section class="slide">
+      <h2>The Fun Stuff</h2>
+      <ul>
+        <li class="slide"><h3>Custom Elements</h3>
+            <ul>
+                <li>The <code>&lt;r-wetherbee&gt;&lt;/r-wetherbee&gt;</code> tag!
+                <li>Creating and Registering</li>
+                <li>Extending</li>
+            </ul>
+        </li>
+        <li class="slide"><h3>Shadow DOM</h3>
+            <ul>
+                <li>Encapsulating</li>
+                <li>Styling</li>
+            </ul>
+        </li>
+        <li class="slide"><h3>Templates</h3>
+        </li>
+        <li class="slide"><h3>Imports</h3>
+        </li>
+      </ul>
+    </section>
+
+
+    <!-- ############################################################################## -->
+    <section class="slide">
+        <h2>Custom Elements: Creating the <code>&lt;r-wetherbee&gt;</code> tag!</h2>
+        <ul>
+            <li><h3>Create Prototype</h3></li>
+            <li><h3>Assign Callbacks / Functions / Properties </h3></li>
+            <li><h3>Register Tag</h3></li>
+        </ul>
+        <pre><code><span color="red">var rWetherbeeProto = <strong>Object.create(HTMLElement.prototype);</strong></span>
+        
+rWetherbeeProto.defaultMyName = 'Buddy';
+        
+rWetherbeeProto.<strong>createdCallback</strong> = function() {
+    this.innerHTML = '&lt;img src="images/reuben.jpg""&gt;';
+    
+    this.addEventListener('click', function() {
+        var myName = this.getAttribute("my_name");
+        if (myName) alert('Hello ' + myName);
+        else alert('Hello ' + this.defaultMyName);
+    });
+};
+
+<strong>document.registerElement</strong>('r-wetherbee', {prototype: rWetherbeeProto});</code></pre>
+
+    </section>
+    
+    <!-- ############################################################################## -->
+    <section class="slide">
+        <h2>Using Custom Elements</h2>
+        <div>Use in HTML</div>
+        <pre><code>&lt;r-wetherbee&gt;&lt;/r-wetherbee&gt;
+&lt;r-wetherbee my_name="Joshua"&gt;&lt;/r-wetherbee&gt;</code></pre>
+    <div>
+        <r-wetherbee></r-wetherbee> <span style="float: left">&nbsp;</span>
+        <r-wetherbee my_name="Joshua" ></r-wetherbee>
+    </div>
+    
+
+    </section>
+    
+    <!-- ############################################################################## -->
+    <section class="slide">
+        <h2>Custom Elements: Dashes and Callbacks</h2>
+        <div class="slide">
+        <h3>Custom element tag names must contain a "-"</h3>
+         <div>e.g "sas-penn_person_lookup", "mytag-x"</div>
+        </div>
+        <div class="slide">
+        <h3>Callback Functions</h3>
+        <table class="table" >
+          <thead>
+            <tr>
+              <th>Callback name</th>
+              <th>Called when</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>createdCallback</td>
+              <td>an instance of the element is created</td>
+            </tr>
+            <tr>
+              <td>attachedCallback</td>
+              <td>an instance was inserted into the document</td>
+            </tr>
+            <tr>
+              <td>detachedCallback</td>
+              <td>an instance was removed from the document</td>
+            </tr>
+            <tr>
+              <td>attributeChangedCallback<br />(attrName, oldVal, newVal)</td>
+              <td>an attribute was added, removed, or updated</td>
+            </tr>
+          </tbody>
+        </table>
+        Shamelessly lifted from <a href="http://www.html5rocks.com/en/tutorials/webcomponents/customelements/">HTML5Rocks</a>
+        </div>
+    </section>
+    
+    
+    <!-- ############################################################################## -->
+    <section class="slide">
+        <h2>Extending Native Elements:<br>the <code>&lt;button is="r-wetherbee-button"&gt;</code></h2>
+        <pre><code>var rWetherbeeButtonProto = Object.create(<strong>HTMLButtonElement</strong>.prototype);
+
+rWetherbeeButtonProto.createdCallback = function() {
+    this.style['background-image'] =  'url("images/reuben.jpg")';
+    this.addEventListener('click', function(){ alert("I'm an r-wetherbee button"); });
+};
+
+document.registerElement('r-wetherbee-button', {
+    prototype: rWetherbeeButtonProto,
+    <strong>extends: 'button'</strong>
+});</code></pre>
+<pre><code>&lt;button <strong>is="r-wetherbee-button"</strong>&gt;click&lt;/button&gt;</code></pre>
+        <button is="r-wetherbee-button">click</button>
+    </section>
+    
+        <!-- ############################################################################## -->
+    <section class="slide">
+        <h2>Custom Elements: So Who Cares?</h2>
+        <h3>You can turn this</h3>
+        <code><pre>&lt;div class="profile"&gt;
+  &lt;div class="profile_element"&gt;
+    &lt;div class="profile_label"&gt;Name&lt;/div&gt;
+    &lt;div class="profile_value"&gt;Reuben&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class="profile_email"&gt;
+    &lt;div class="profile_label"&gt;Email&lt;/div&gt;
+    &lt;div class="profile_value"&gt;&lt;a href="mailto:reuben@example.com"&gt;reuben@example.com&lt;/a&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class="profile_address"&gt;
+    &lt;div class="profile_label"&gt;Address&lt;/div&gt;
+    &lt;div class="profile_value"&gt;107 Clwyd Rd&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+        </pre></code>
+   </section>
+       
+    <!-- ############################################################################## -->
+    <section class="slide">
+    <h2>Custom Elements: So Who Cares?</h2>
+    <h3>Into This:</h3>
+        <code><pre>&lt;penn-profile&gt;
+  &lt;penn-profile_name"&gt;Reuben&lt;/penn-profile_name&gt;
+  &lt;penn-profile_email"&gt;reuben@example.com&lt;/penn-profile_email&gt;
+  &lt;penn-profile_address"&gt;107 Clywd Rd&lt;/penn-profile_email&gt;
+&lt;/penn-profile&gt;
+        </pre></code>
+        <section class="slide">
+        <h3>Or even this:</h3>
+        <code><pre>&lt;penn-profile
+  name="Reuben"
+  email="reuben@example.com"
+  address="107 Clywd Rd"
+&gt;&lt;/penn-profile&gt;</pre></code>
+        </section>
+    </section>
+    
+    <!-- ############################################################################## -->
+    <section class="slide">
+        <h2>The Shadow DOM</h2>
+        <h3>Jedi Master Web Development</h3>
+        <section class="slide">
+        <blockquote><img src="images/yoda1.jpg">
+            Once you start down the path to the Shadow DOM, forever will it dominate your destiny, consume you it will.
+            <cite>Yoda</cite>
+        </blockquote>
+        
+        </section>
+        <section class="slide">
+            <h3>The Shadow DOM already exists</h3>
+            <code><pre>Date: &lt;input id="mydate" type="date" /&gt;</pre></code>
+            Date: <input id="mydate" type="date" />
+        </section>
+    </section>
+    
+    <!-- ############################################################################## -->
+    <section class="slide">
+    <h2>Shadow DOM v. DOM</h2>
+        <blockquote><img src="images/yoda1.jpg">
+            The Shadow DOM clouds everything. Impossible to see the inner html is.
+            <cite>Yoda</cite>
+        </blockquote>
+        <code><pre>
+rWetherbeeProto.createdCallback = function() {
+    this.innerHTML = '&lt;img src="images/reuben.jpg""&gt;';
+};
+&lt;r-wetherbee id="no_shadow1"&gt;Regular Inner HTML Overwritten&lt;/r-wetherbee&gt;</pre></code>
+        <r-wetherbee id="no_shadow1">Regular Inner HTML Overwritten</r-wetherbee>
+        <code><pre>rWetherbeeShadowProto.createdCallback = function() {
+    var shadowRoot = this.<strong>createShadowRoot()</strong>;
+    shadowRoot.innerHTML = '&lt;img src="images/reuben.jpg"&gt;;
+};
+&lt;r-wetherbee-shadow id="shadow1"&gt;Regular Inner HTML Hidden&lt;/r-wetherbee-shadow&gt;</pre></code>
+
+        <r-wetherbee-shadow id="shadow1">Regular Inner HTML Hidden</r-wetherbee-shadow>
+      
+    </section>
+    
+    
+    <!-- ############################################################################## -->
+    <section class="slide">
+    <h2>Shadow DOM: What is going on?</h2>
+        <div>Why is <code>&lt;r-wetherbee&gt;</code> centered?</div>
+        <r-wetherbee></r-wetherbee>
+        <div>And <code>&lt;r-wetherbee-shadow&gt;</code>  not?</div>
+        <r-wetherbee-shadow></r-wetherbee-shadow>
+        <blockquote class="slide"><img src="images/yoda1.jpg">
+            That place is strong with the Shadow DOM.<cite>Yoda</cite><br>
+            What's in there?<cite>Luke</cite><br>
+            Only what you take with you.<cite>Yoda</cite>
+        </blockquote>
+
+    </section>
+    
+     <!-- ############################################################################## -->
+    <section class="slide">
+        <h2>Shadow DOM: Style Encapsulation Rules</h2>
+        <ul>
+            <li><h3>CSS styles defined inside Shadow DOM are scoped to the ShadowRoot (i.e. don't bleed out)</h3></li>
+            <li><h3>CSS Selectors Do Not Cross the Shadow Boundry (i.e. don't bleed in)</h3></li>
+        </ul>
+        <pre><code>shadowRoot.innerHTML = '&lt;style&gt;h3 {color: red}&lt;/style&gt;&lt;h3&gt;Shadow Style&lt;/h3&gt;';</code></pre>
+        <shadow-styled></shadow-styled>
+    </section>
+    
+         <!-- ############################################################################## -->
+    <section class="slide">
+        <h2>Shadow DOM: Styling based on the host</h2>
+        <ul>
+            <li><h3>Style the hosting element using :host defined in the shadow</h3></li>
+            <li><h3>Use CSS selectors :host(selector) to specify properties from host state</h3></li>
+            <li><h3>Use :host-context(selector) to specify properties from host context</h3></li>
+        </ul>
+        <pre><code>shadowRoot.innerHTML = '&lt;style&gt;
+    :host { opacity: 0.2;}
+    :host(:hover) { opacity: 1;}
+    :host(.underlined) {text-decoration: underline}
+    :host-context(.bordered) {border: 1px solid green}
+    span{color: red}
+&lt;/style&gt;
+no span content &lt;span&gt;span content&lt;/span&gt;';</code></pre>
+       <code><pre>&lt;host-styled&gt;&lt;/host-styled&gt;
+&lt;host-styled class="underlined"&gt;&lt;/host-styled&gt;
+&lt;span class="bordered"&gt;&lt;host-styled &gt;&lt;/host-styled&gt;&lt;/span&gt;</pre></code>
+        <div>
+            <host-styled></host-styled>&nbsp;-&nbsp;
+            <host-styled class="underlined"></host-styled>&nbsp;-&nbsp;
+            <span class="bordered"><host-styled></host-styled></span>
+        </div>
+    </section>
+    
+    
+    <!-- ############################################################################## -->
+    <section class="slide">
+    <h2>Shadow DOM: Piercing the Boundry</h2>
+        <ul>
+            <li><h3>Use ::shadow to bypass single layer of the shadow boundry from outside</h3></li>
+            <li><h3>Use /deep/ to bypass all layers of shadow boundry in descendents</h3></li>
+        </ul>
+        <pre><code>&lt;style&gt;
+    #pierced<strong>::shadow</strong> span {text-transform: uppercase}
+    #pierced_container <strong>/deep/</strong> span.span2 {color: blue}
+&lt;/style&gt;
+&lt;host-styled id="pierced"&gt;&lt;/host-styled&gt;
+&lt;div id="pierced_container"&gt;&lt;host-styled&gt;&lt;/host-styled&gt;&lt;/div&gt;
+</code></pre>
+        
+        <style>
+            #pierced::shadow span {text-transform: uppercase}
+            #pierced_container  /deep/ span.span2 {color: blue}
+        </style>
+        <host-styled id="pierced"></host-styled>
+        <div id="pierced_container"><host-styled></host-styled></div>
+      </section>
+    
+    <!-- ############################################################################## -->
+    <section class="slide">
+        <h2>Shadow Dom: Using DOM Content</h2>
+        <h3>Use the DOM content to populate the Shadow DOM content with the &lt;content&gt; tag</h3>
+        <pre><code>shadowRoot.innerHTML = '&lt;div&gt;
+    &lt;span&gt;Hello! My Name Is&lt;/span&gt;
+    &lt;span style="color: green"&gt;<strong>&lt;content&gt;&lt;/content&gt;</strong>&lt;/span&gt;';
+&lt;/div&gt;
+};</code></pre>
+    <pre><code>&lt;shadow-nametag&gt;Reuben&lt;/shadow-nametag&gt;</code></pre>
+    
+        <shadow-nametag id="nametag">Reuben</shadow-nametag>
+        <div><input id="change_name" />&nbsp;<button onclick="$('#nametag').html($('#change_name').val())">Change DOM HTML</button></div>
+      </section>
+    
+    <!-- ############################################################################## -->
+    <section class="slide">
+    <h2>Shadow DOM: Encapsulation</h2>
+        <blockquote><img src="images/yoda1.jpg">
+            Encapsulation is the path to the Shadow DOM…encapsulation leads to widgets…widgets lead to reuseability…reusability leads to less suffering.
+            <cite>Yoda</cite>
+        </blockquote>
+        
+      </section>
+      
+     <!-- ############################################################################## -->
+   <section class="slide">
+        <h2>Web Components: Templates</h2>
+        <h3>Are you getting tired of typing html in your javascript?</h3>
+        <pre><code>shadowRoot.innerHTML = '&lt;div class="tab_container"&gt;' +
+    '&lt;div class="tabs_header"&gt;Here is some text&lt;/div&gt;' +
+    '&lt;div class="tabs"&gt;' +
+        '&lt;div class="tab"&gt;' +
+            '&lt;div class="tab_header"&gt;First Tab&lt;/div&gt;' +
+            '&lt;div class="tab_content"&gt;' + tabContent[0] + '&lt;/div&gt;' +
+        '&lt;/div&gt;' +
+    '&lt;/div&gt;' +
+'&lt;/div&gt;'</code></pre>
+        
+    </section>
+    
+     <!-- ############################################################################## -->
+    <section class="slide">
+    <h2>Web Components: Templates</h2>
+    <h3>Templates to the rescue!</h3>
+    <pre><code><pre><code><strong>&lt;template id="tab_template"&gt;</strong>
+  &lt;div class="tab_container"&gt;
+    &lt;div class="tabs_header"&gt;Here are my tabs&lt;/div&gt;
+    &lt;div class="tabs"&gt;
+      &lt;div class="tab"&gt;
+          &lt;div class="tab_header"&gt;First Tab&lt;/div&gt;
+          &lt;div class="tab_content"&gt;&lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+<strong>&lt;/template&gt;</strong></code></pre></code></pre>
+    
+    </section>
+    
+    
+     <!-- ############################################################################## -->
+     <section class="slide">
+    <h2>Using Templates</h2>
+    <h3>Template</h3>
+    <code><pre>&lt;template id="yoda_hi_template"&gt;
+    &lt;style&gt;
+        div { color: purple}
+        img { height: 150px; width: 100px}
+        .greetee_name { color: green}
+    &lt;/style&gt;
+    &lt;div&gt;
+        &lt;img src="images/yoda1.jpg"&gt;
+        Yoda says 'hi' to &lt;span class="greetee_name"&gt;&lt;content&gt;&lt;/content&gt;&lt;/span&gt;
+    &lt;/div&gt;
+&lt;/template&gt;</pre></code>
+
+    <h3>Instantiate In Custom Element Shadow DOM</h3>
+<pre><code>yodaHiProto.createdCallback = function() {
+    var shadowRoot = this.createShadowRoot();
+    var template = document.getElementById('yoda_hi_template');
+    shadowRoot.appendChild(<strong>document.importNode(template.content, true)</strong>);
+};</pre></code>
+    <h3>Use in HTML</h3>
+    <pre><code>&lt;yoda-hi&gt;Reuben&lt;/yoda-hi&gt;</code></pre>
+    <div>
+        <yoda-hi>Reuben</yoda-hi>
+    </div>
+    </section>
+    
+    
+     <!-- ############################################################################## -->
+     <section class="slide">
+    <h2>Using Templates: More Variables</h2>
+    <h3>Template</h3>
+    <code><pre>&lt;template id="anyone_hi_template"&gt;
+    &lt;style&gt;
+        div { color: purple}
+        img { height: 150px; width: 100px}
+        greeter { color: green}
+        greetee { color: red}
+    &lt;/style&gt;
+    &lt;div&gt;
+        &lt;img src="images/yoda1.jpg"&gt;
+        <strong>&lt;greeter&gt;&lt;/greeter&gt;</strong> says 'hi' to <strong>&lt;greetee&gt;&lt;/greetee&gt;</strong>
+    &lt;/div&gt;
+&lt;/template&gt;</pre></code>
+
+    <h3>Instantiate In Custom Element Shadow DOM</h3>
+<pre><code>anyoneHiProto.createdCallback = function() {
+    var shadowRoot = this.createShadowRoot();
+    var template = document.getElementById('anyone_hi_template').content;
+    <strong>template.querySelector('greeter').innerHTML = this.getAttribute("greeter");
+    template.querySelector('greetee').innerHTML = this.getAttribute("greetee");</strong>
+    shadowRoot.appendChild(document.importNode(template, true));
+};</pre></code>
+    <h3>Use in HTML</h3>
+    <pre><code>&lt;anyone-hi greeter="Reuben" greetee="Yoda"&gt;&lt;/anyone-hi&gt;</code></pre>
+    <div>
+        <anyone-hi greeter="Reuben" greetee="Yoda"></anyone-hi>
+    </div>
+    </section>
+    
+    
+     <!-- ############################################################################## -->
+    <section class="slide">
+    <h2>Templates: Extra Bonuses</h2>
+        <ul>
+            <li><h3>Its content is effectively inert until activated. Essentially, your markup is hidden DOM and does not render.</h3></li>
+            <li><h3>Any content within a template won't have side effects. Script doesn't run, images don't load, audio doesn't play,...until the template is used.</h3></li>
+            <li><h3>Content is considered not to be in the document.</h3></li>
+        </ul>
+        <div>Shamelessly lifted from <a href="http://www.html5rocks.com/en/tutorials/webcomponents/template/">HTML5Rocks</a></div>
+    </section>
+    
+    <!-- ############################################################################## -->
+    <section class="slide">
+        <h2>Web Components: Imports</h2>
+        <h3>The way to package and distribute Web Components</h3>
+        <pre><code>&lt;head&gt;
+    &lt;link <strong>rel="import"</strong> href="say_hi_widget.html"&gt;
+&lt;/head&gt;</code></pre>
+
+    <pre><code>&lt;say-hi greeter="Reuben" greetee="Yoda"&gt;&lt;/say-hi&gt;</code></pre>
+<say-hi greeter="reuben" greetee="yoda"></say-hi>
+     </section>
+     
+
+     
+     
+    <!-- ############################################################################## -->
+    <section class="slide">
+        <h2>Imports: Component Template</h2>
+        <h3>say_high_widget.html</h3>
+        <pre><code>&lt;template id="say_hi_template"&gt;
+    &lt;style&gt;
+        div { color: purple}
+        img { height: 150px; width: 100px}
+        greeter { color: green}
+        greetee { color: red}
+    &lt;/style&gt;
+    &lt;div&gt;
+        &lt;img src="images/yoda1.jpg"&gt;
+        &lt;greeter&gt;&lt;/greeter&gt; says 'hi' to &lt;greetee&gt;&lt;/greetee&gt;
+    &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script id="sayHiScript"&gt;
+   (function () {
+    var importDoc = <strong>document.currentScript.ownerDocument</strong>;
+    var sayHiProto = Object.create(HTMLElement.prototype);
+    //create the text of the element on creation
+    sayHiProto.createdCallback = function() {
+        var shadowRoot = this.createShadowRoot();
+        var template = <strong>importDoc</strong>.getElementById('say_hi_template').content;
+        template.querySelector('greeter').innerHTML = this.getAttribute("greeter");
+        template.querySelector('greetee').innerHTML = this.getAttribute("greetee");
+        shadowRoot.appendChild(document.importNode(template, true));
+    };
+
+    document.registerElement('say-hi', {prototype: sayHiProto});
+   })();
+&lt;/script&gt;</code></pre>
+     </section>
+     
+     
+    <!-- ############################################################################## -->
+    <section class="slide">
+        <h2>Imports: Bundling Packages</h2>
+        
+        <h3>You know how much of a pain loading some libraries that require js and css is?</h3>
+        <h4>index.html</h4>
+        <code><pre>&lt;head&gt;
+  &lt;link rel="import" href="bootstrap.html"&gt;
+&lt;/head&gt;
+        </pre></code>
+        
+        <h4>bootstrap.html</h4>
+        <pre><code>&lt;link rel="stylesheet" href="bootstrap.css"&gt;
+&lt;link rel="stylesheet" href="fonts.css"&gt;
+&lt;script src="jquery.js"&gt;&lt;/script&gt;
+&lt;script src="bootstrap.js"&gt;&lt;/script&gt;
+&lt;script src="bootstrap-tooltip.js"&gt;&lt;/script&gt;
+&lt;script src="bootstrap-dropdown.js"&gt;&lt;/script&gt;</code></pre>
+     </section>     
+     
+          <!-- ############################################################################## -->
+     <section class="slide">
+    <h2>Web Components: browser support</h2>
+        <h3>Getting there, but you can use Polyfills</h3>
+        <a href="http://jonrimmer.github.io/are-we-componentized-yet/" target="_blank">Are We Componetized Yet?</a>
+     </section>
+    <!-- End slides. -->
+     
+     <!-- ############################################################################## -->
+     <section class="slide">
+    <h2>Web Components</h2>
+        <blockquote><img src="images/yoda1.jpg">
+            If you end your training now — if you choose the quick and easy path as Vader did — you will become an agent of evil.
+            <cite>Yoda</cite>
+        </blockquote>
+        <a href="https://www.youtube.com/watch?v=7ubJzEi3HuA">You Tube For Speed</a>
+     </section>
+    <!-- End slides. -->
+
+    <!-- Begin extension snippets. Add or remove as needed. -->
+
+    <!-- deck.navigation snippet -->
+    <div aria-role="navigation">
+      <a href="#" class="deck-prev-link" title="Previous">&#8592;</a>
+      <a href="#" class="deck-next-link" title="Next">&#8594;</a>
+    </div>
+
+    <!-- deck.status snippet -->
+    <p class="deck-status" aria-role="status">
+      <span class="deck-status-current"></span>
+      /
+      <span class="deck-status-total"></span>
+    </p>
+
+    <!-- deck.goto snippet -->
+    <form action="." method="get" class="goto-form">
+      <label for="goto-slide">Go to slide:</label>
+      <input type="text" name="slidenum" id="goto-slide" list="goto-datalist">
+      <datalist id="goto-datalist"></datalist>
+      <input type="submit" value="Go">
+    </form>
+
+    <!-- End extension snippets. -->
+  </div>
+
+<!-- Required JS files. -->
+<script src="bower_components/deck.js/jquery.min.js"></script>
+<script src="bower_components/deck.js/core/deck.core.js"></script>
+
+<!-- Extension JS files. Add or remove as needed. -->
+<script src="bower_components/deck.js/extensions/menu/deck.menu.js"></script>
+<script src="bower_components/deck.js/extensions/goto/deck.goto.js"></script>
+<script src="bower_components/deck.js/extensions/status/deck.status.js"></script>
+<script src="bower_components/deck.js/extensions/navigation/deck.navigation.js"></script>
+<script src="bower_components/deck.js/extensions/scale/deck.scale.js"></script>
+
+<!-- Initialize the deck. You can put this in an external file if desired. -->
+<script>
+  $(function() {
+    $.deck('.slide');
+  });
+</script>
+
+<script id="tagScript">
+    var rWetherbeeProto = Object.create(HTMLElement.prototype);
+    
+    rWetherbeeProto.defaultMyName = 'Buddy';
+    //create the text of the element on creation
+    rWetherbeeProto.createdCallback = function() {
+        this.innerHTML = '<img src="images/reuben.jpg">';
+        this.addEventListener('click', function() {
+            var myName = this.getAttribute("my_name");
+            if (myName) alert('Hello ' + myName); else alert('Hello ' + this.defaultMyName);
+        });
+    };
+
+    document.registerElement('r-wetherbee', {prototype: rWetherbeeProto});
+</script>
+
+<script id="buttonScript">
+    var rWetherbeeButtonProto = Object.create(HTMLButtonElement.prototype);
+    
+    //create the text of the element on creation
+    rWetherbeeButtonProto.createdCallback = function() {
+        this.style['background'] =  'grey url("images/reuben.jpg") no-repeat center center';
+        this.style.width = '100px';
+        this.style.height = '100px';
+        this.style.color = 'white';
+        this.addEventListener('click', function(){ alert("I'm an r-wetherbee button"); });
+    };
+
+    document.registerElement('r-wetherbee-button', {
+        prototype: rWetherbeeButtonProto,
+        extends: 'button'
+    });
+</script>
+
+
+<script id="tagScript">
+    var rWetherbeeShadowProto = Object.create(HTMLElement.prototype);
+    
+    rWetherbeeShadowProto.defaultMyName = 'Buddy';
+    //create the text of the element on creation
+    rWetherbeeShadowProto.createdCallback = function() {
+        var shadowRoot = this.createShadowRoot();
+        shadowRoot.innerHTML = '<img  src="images/reuben.jpg">';
+        this.addEventListener('click', function() {
+            var myName = this.getAttribute("my_name");
+            if (myName) alert('Hello ' + myName); else alert('Hello ' + this.defaultMyName);
+        });
+    };
+
+    document.registerElement('r-wetherbee-shadow', {prototype: rWetherbeeShadowProto});
+</script>
+<script id="shadowStyleScript">
+    var shadowStyledProto = Object.create(HTMLElement.prototype);
+    
+    //create the text of the element on creation
+    shadowStyledProto.createdCallback = function() {
+        var shadowRoot = this.createShadowRoot();
+        shadowRoot.innerHTML = '<style>h3 {color: red}</style><h3>Shadow Style</h3>';
+    };
+
+    document.registerElement('shadow-styled', {prototype: shadowStyledProto});
+</script>
+
+<script id="hostStyleScript">
+    var hostStyleProto = Object.create(HTMLElement.prototype);
+    
+    //create the text of the element on creation
+    hostStyleProto.createdCallback = function() {
+        var shadowRoot = this.createShadowRoot();
+        shadowRoot.innerHTML = '<style>:host { opacity: 0.2;} :host(:hover) { opacity: 1;} span{color: red; text-decoration: inherit} :host(.underlined) {text-decoration: underline} :host-context(.bordered) {border: 1px solid green}</style>' 
+            + 'no span content <span>span</span> <span class="span2">span 2</span>';
+    };
+
+    document.registerElement('host-styled', {prototype: hostStyleProto});
+</script>
+
+
+<script id="contentShadowScript">
+    var contentShadowProto = Object.create(HTMLElement.prototype);
+    
+    //create the text of the element on creation
+    contentShadowProto.createdCallback = function() {
+        var shadowRoot = this.createShadowRoot();
+        shadowRoot.innerHTML = '<div>Hello! My Name Is <span style="color: green"><content></content></span>';
+    };
+
+    document.registerElement('shadow-nametag', {prototype: contentShadowProto});
+</script>
+
+
+<template id="yoda_hi_template">
+    <style>
+        div { color: purple}
+        img { height: 150px; width: 100px}
+        .greetee_name { color: green}
+    </style>
+    <div>
+        <img src="images/yoda1.jpg">
+        Yoda says 'hi' to <span class="greetee_name"><content></content></span>
+    </div>
+</template>
+
+<script id="yodaHiScript">
+    var yodaHiProto = Object.create(HTMLElement.prototype);
+    
+    //create the text of the element on creation
+    yodaHiProto.createdCallback = function() {
+        var shadowRoot = this.createShadowRoot();
+        var template = document.getElementById('yoda_hi_template');
+        shadowRoot.appendChild(document.importNode(template.content, true));
+    };
+
+    document.registerElement('yoda-hi', {prototype: yodaHiProto});
+</script>
+
+
+<template id="anyone_hi_template">
+    <style>
+        div { color: purple}
+        img { height: 150px; width: 100px}
+        greeter { color: green}
+        greetee { color: red}
+    </style>
+    <div>
+        <img src="images/yoda1.jpg">
+        <greeter></greeter> says 'hi' to <greetee></greetee>
+    </div>
+</template>
+<script id="anyoneHiScript">
+    var anyoneHiProto = Object.create(HTMLElement.prototype);
+    
+    //create the text of the element on creation
+    anyoneHiProto.createdCallback = function() {
+        var shadowRoot = this.createShadowRoot();
+        var template = document.getElementById('anyone_hi_template').content;
+        template.querySelector('greeter').innerHTML = this.getAttribute("greeter");
+        template.querySelector('greetee').innerHTML = this.getAttribute("greetee");
+        shadowRoot.appendChild(document.importNode(template, true));
+    };
+
+    document.registerElement('anyone-hi', {prototype: anyoneHiProto});
+</script>
+
+</body>
+</html>

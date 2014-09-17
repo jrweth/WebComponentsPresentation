@@ -1,0 +1,29 @@
+<template id="say_hi_template">
+    <style>
+        div { color: purple}
+        img { height: 150px; width: 100px}
+        greeter { color: green}
+        greetee { color: red}
+    </style>
+    <div>
+        <img src="images/yoda1.jpg">
+        <greeter></greeter> says 'hi' to <greetee></greetee>
+    </div>
+</template>
+
+<script id="sayHiScript">
+   (function () {
+    var importDoc = document.currentScript.ownerDocument;
+    var sayHiProto = Object.create(HTMLElement.prototype);
+    //create the text of the element on creation
+    sayHiProto.createdCallback = function() {
+        var shadowRoot = this.createShadowRoot();
+        var template = importDoc.getElementById('say_hi_template').content;
+        template.querySelector('greeter').innerHTML = this.getAttribute("greeter");
+        template.querySelector('greetee').innerHTML = this.getAttribute("greetee");
+        shadowRoot.appendChild(document.importNode(template, true));
+    };
+
+    document.registerElement('say-hi', {prototype: sayHiProto});
+   })();
+</script>
